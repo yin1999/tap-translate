@@ -1,0 +1,31 @@
+{
+	"manifest_version": 3,
+	"name": "tap translate",
+	"description": "tap to translate",
+	"version": "0.01",
+	"permissions": [
+		"scripting",
+		"storage"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"*://*/*"
+			],
+			"css": [
+				"content/popover.css"
+			],
+			"js": [
+				"content/inject.js"
+			]
+		}
+	],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"options_page": "options/options.html",
+	"icons": {
+		"128": "translate.png"
+	},
+	"action": {}
+}
