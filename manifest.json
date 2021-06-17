@@ -4,7 +4,6 @@
 	"description": "tap to translate",
 	"version": "0.01",
 	"permissions": [
-		"scripting",
 		"storage"
 	],
 	"content_scripts": [

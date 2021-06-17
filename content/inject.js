@@ -17,7 +17,6 @@ document.addEventListener('mouseup', e => {
 	const selectedText = selection.toString().trim()
 	if (selectedText.length > 0) {
 		const rect = selection.getRangeAt(0).getBoundingClientRect()
-		triggered = true
 		chrome.runtime.sendMessage(selectedText, response => {
 			switch (response.status) {
 				case "ok":
