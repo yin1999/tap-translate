@@ -20,7 +20,7 @@ document.addEventListener('mouseup', e => {
 		chrome.runtime.sendMessage(selectedText, response => {
 			switch (response.status) {
 				case "ok":
-					renderBubble(rect.left, rect.bottom, response.translatedText)
+					renderBubble(rect.left + window.pageXOffset, rect.bottom + window.pageYOffset, response.translatedText)
 					break
 				case "noOp":
 					break
