@@ -24,7 +24,7 @@
 	},
 	"options_page": "options/options.html",
 	"icons": {
-		"128": "translate.png"
+		"128": "translate-on.png"
 	},
 	"action": {}
 }

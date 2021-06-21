@@ -21,6 +21,7 @@ chrome.action.onClicked.addListener(() => {
 
 function setState(newstate) {
 	chrome.storage.local.set({ state: newstate })
+	chrome.action.setIcon({ path: newstate ? "translate-on.png" : "translate-off.png" })
 	chrome.action.setTitle({ title: "Status: " + (newstate ? "ON" : "OFF") })
 }
 
@@ -50,7 +51,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 			})
 			return
 		}
-		chrome.storage.sync.get(["token", "engine"], async result => {	
+		chrome.storage.sync.get(["token", "engine"], async result => {
 			if (!result.engine || !result.token || !result.token[result.engine]) {
 				sendResponse({
 					status: "please complete the settings"

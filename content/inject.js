@@ -38,13 +38,13 @@ document.addEventListener('selectionchange', e => {
 
 // Close the bubble when we click on the screen.
 document.addEventListener('mousedown', () => {
-	bubbleDOM.style.visibility = 'hidden';
+	bubbleDOM.style.visibility = 'hidden'
 })
 
 // Move that bubble to the appropriate location.
 function renderBubble(x, y, selection) {
-	innerContent.innerText = selection;
-	bubbleDOM.style.top = y + 'px';
-	bubbleDOM.style.left = x + 'px';
-	bubbleDOM.style.visibility = 'visible';
+	innerContent.innerText = selection
+	bubbleDOM.style.top = y + 'px'
+	bubbleDOM.style.left = x + 'px'
+	bubbleDOM.style.visibility = 'visible'
 }
