@@ -32,9 +32,6 @@ jobs:
           const fs = require('fs')
           const manifest = JSON.parse(fs.readFileSync('manifest.json'))
           return 'v' + manifest.version
-    - name: generate rules
-      run: |
-        node ./config.js
 
     - name: package files
       run: |
