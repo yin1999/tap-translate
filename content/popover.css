@@ -1,7 +1,6 @@
 .popover__content {
 	position: absolute;
 	margin-top: 1rem;
-	visibility: hidden;
 	background-color: #bfbfbf;
 	padding: 1rem;
 	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
