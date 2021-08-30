@@ -1,7 +1,3 @@
-importScripts('CryptoJS/components/core-min.js')
-importScripts('CryptoJS/components/enc-base64-min.js')
-importScripts('CryptoJS/rollups/hmac-sha1.js')
-
 /**
  * 
  * @param {String} text 
@@ -119,10 +115,7 @@ async function aliOpenAPIRequest(action, body, accessKey, secretKey) {
     const header = new Headers({
         "Content-Type": "application/x-www-form-urlencoded"
     })
-    const signature = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA1(
-        stringToSign,
-        CryptoJS.enc.Utf8.parse(secretKey + "&")
-    ))
+    const signature = await HmacSha1Digest(secretKey, stringToSign)
     encodedBody += "&Signature=" + encodeURIComponent(signature)
     return fetch(requestUrl, {
         method: "POST",
@@ -130,4 +123,21 @@ async function aliOpenAPIRequest(action, body, accessKey, secretKey) {
         headers: header
     })
         .then(res => res.json())
+}
+
+/**
+ * 
+ * @param {String} secretKey 
+ * @param {String} stringToSign 
+ * @returns 
+ */
+async function HmacSha1Digest(secretKey, stringToSign) {
+    const enc = new TextEncoder()
+    let key = await crypto.subtle.importKey('raw', enc.encode(secretKey+"&"), {
+        name: 'HMAC',
+        hash: 'SHA-1'
+    }, false, ['sign'])
+    let signature = await crypto.subtle.sign('HMAC', key, enc.encode(stringToSign))
+    signature = String.fromCharCode(...new Uint8Array(signature))
+    return btoa(signature)
 }
