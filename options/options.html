@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>tap translate</title>
-    <link rel="stylesheet" href="options.css">
-    <script defer src="options.js"></script>
-</head>
-<body>
-    <form>
-        <fieldset>
-            <legend>Google Translate</legend>
-            <label for="google-key">key</label>
-            <input type="password" name="google-key" id="google-key">
-        </fieldset>
-        <fieldset>
-            <legend>Ali Translate</legend>
-            <label for="ali-ak">Access Key</label>
-            <input type="text" name="ali-ak" id="ali-ak">
 
-            <label for="ali-sk">Secret Key</label>
-            <input type="password" name="ali-sk" id="ali-sk">
-        </fieldset>
-        
-        <fieldset>
-            <legend>Engine Selection</legend>
-            <ul id="select">
-                <div>
-                    <input type="radio" checked name="engine-select" id="ali-engine">
-                    <label for="ali-engine">Ali Translate</label>
-                </div>
-                <div>
-                    <input type="radio" name="engine-select" id="google-engine">
-                    <label for="google-engine">Google Translate</label>
-                </div>
-            </ul>
-        </fieldset>
-    </form>
-    <button id="save">save</button>
+<head>
+	<meta charset="UTF-8">
+	<title>tap translate</title>
+	<link rel="stylesheet" href="options.css">
+	<script defer src="options.js"></script>
+</head>
+
+<body>
+	<form>
+		<fieldset>
+			<legend>Google Translate</legend>
+			<label for="google-key">key</label>
+			<input type="password" name="google-key" id="google-key">
+		</fieldset>
+		<fieldset>
+			<legend>Ali Translate</legend>
+			<label for="ali-ak">Access Key</label>
+			<input type="text" name="ali-ak" id="ali-ak">
+
+			<label for="ali-sk">Secret Key</label>
+			<input type="password" name="ali-sk" id="ali-sk">
+		</fieldset>
+
+		<fieldset>
+			<legend>Engine Selection</legend>
+			<ul id="select">
+				<div>
+					<input type="radio" checked name="engine-select" id="ali-engine">
+					<label for="ali-engine">Ali Translate</label>
+				</div>
+				<div>
+					<input type="radio" name="engine-select" id="google-engine">
+					<label for="google-engine">Google Translate</label>
+				</div>
+			</ul>
+		</fieldset>
+	</form>
+	<button id="save">save</button>
 </body>
+
 </html>

@@ -6,45 +6,45 @@
  * @returns 
  */
 async function aliTranslate(text, token, sourceLanguage) {
-    if (!token.ak || !token.sk) {
-        return {
-            status: 'access key or secret key has not set'
-        }
-    }
-    // detect language
-    if (!sourceLanguage) {
-        const body = {
-            "SourceText": text
-        }
-        try {
-            const res = await aliOpenAPIRequest('GetDetectLanguage', body, token.ak, token.sk)
-            sourceLanguage = res.DetectedLanguage
-        } catch(err) {
-            return {
-                status: err
-            }
-        }
-    }
-    const body = {
-        FormatType: 'text',
-        SourceLanguage: sourceLanguage,
-        SourceText: text,
-        TargetLanguage: 'zh',
-    }
-    return aliOpenAPIRequest('TranslateGeneral', body, token.ak, token.sk)
-        .then(res => {
-            return {
-                translatedText: res.Data.Translated,
-                sourceLanguage: sourceLanguage,
-                status: "ok"
-            }
-        })
-        .catch(err => {
-            console.log(err)
-            return {
-                status: err
-            }
-        })
+	if (!token.ak || !token.sk) {
+		return {
+			status: 'access key or secret key has not set'
+		}
+	}
+	// detect language
+	if (!sourceLanguage) {
+		const body = {
+			"SourceText": text
+		}
+		try {
+			const res = await aliOpenAPIRequest('GetDetectLanguage', body, token.ak, token.sk)
+			sourceLanguage = res.DetectedLanguage
+		} catch (err) {
+			return {
+				status: err
+			}
+		}
+	}
+	const body = {
+		FormatType: 'text',
+		SourceLanguage: sourceLanguage,
+		SourceText: text,
+		TargetLanguage: 'zh',
+	}
+	return aliOpenAPIRequest('TranslateGeneral', body, token.ak, token.sk)
+		.then(res => {
+			return {
+				translatedText: res.Data.Translated,
+				sourceLanguage: sourceLanguage,
+				status: "ok"
+			}
+		})
+		.catch(err => {
+			console.log(err)
+			return {
+				status: err
+			}
+		})
 }
 
 /**
@@ -55,74 +55,74 @@ async function aliTranslate(text, token, sourceLanguage) {
  * @returns 
  */
 async function googleTranslate(text, token, sourceLanguage) {
-    if (!token.key) {
-        return {
-            status: 'key has not set'
-        }
-    }
-    const requestUrl = 'https://translation.googleapis.com/language/translate/v2'
-    const body = {
-        q: text,
-        target: "zh",
-        format: "text"
-    }
-    if (sourceLanguage) {
-        body.source = source
-    }
-    const header = {
-        "Content-Type": "application/json; charset=utf-8"
-    }
-    const url = new URL(requestUrl)
+	if (!token.key) {
+		return {
+			status: 'key has not set'
+		}
+	}
+	const requestUrl = 'https://translation.googleapis.com/language/translate/v2'
+	const body = {
+		q: text,
+		target: "zh",
+		format: "text"
+	}
+	if (sourceLanguage) {
+		body.source = source
+	}
+	const header = {
+		"Content-Type": "application/json; charset=utf-8"
+	}
+	const url = new URL(requestUrl)
 
-    url.searchParams.append("key", token.key)
-    try {
-        const res = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: header
-        })
-        const res_1 = await res.json()
-        return {
-            translatedText: res_1.data.translations[0].translatedText,
-            sourceLanguage: res_1.data.translations[0].detectedSourceLanguage,
-            status: "ok"
-        }
-    } catch (err) {
-        console.error(err)
-        return {
-            status: err
-        }
-    }
+	url.searchParams.append("key", token.key)
+	try {
+		const res = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: header
+		})
+		const res_1 = await res.json()
+		return {
+			translatedText: res_1.data.translations[0].translatedText,
+			sourceLanguage: res_1.data.translations[0].detectedSourceLanguage,
+			status: "ok"
+		}
+	} catch (err) {
+		console.error(err)
+		return {
+			status: err
+		}
+	}
 }
 
 async function aliOpenAPIRequest(action, body, accessKey, secretKey) {
-    const requestUrl = 'https://mt.aliyuncs.com/'
-    body.AccessKeyId = accessKey
-    body.Action = action
-    body.Format = 'JSON'
-    body.SignatureNonce = Math.random().toString(36).slice(-31)
-    body.SignatureMethod = 'HMAC-SHA1'
-    body.SignatureVersion = '1.0'
-    body.Timestamp = new Date().toISOString()
-    body.Version = '2018-10-12'
-    const keys = Object.keys(body).sort()
-    const params = []
-    for (const key of keys) {
-        params.push(encodeURIComponent(key) + "=" + encodeURIComponent(body[key]))
-    }
-    let encodedBody = params.join('&')
-    let stringToSign = 'POST&%2F&' + encodeURIComponent(encodedBody)
-    const header = new Headers({
-        "Content-Type": "application/x-www-form-urlencoded"
-    })
-    const signature = await HmacSha1Digest(secretKey, stringToSign)
-    encodedBody += "&Signature=" + encodeURIComponent(signature)
-    return fetch(requestUrl, {
-        method: "POST",
-        body: encodedBody,
-        headers: header
-    })
-        .then(res => res.json())
+	const requestUrl = 'https://mt.aliyuncs.com/'
+	body.AccessKeyId = accessKey
+	body.Action = action
+	body.Format = 'JSON'
+	body.SignatureNonce = Math.random().toString(36).slice(-31)
+	body.SignatureMethod = 'HMAC-SHA1'
+	body.SignatureVersion = '1.0'
+	body.Timestamp = new Date().toISOString()
+	body.Version = '2018-10-12'
+	const keys = Object.keys(body).sort()
+	const params = []
+	for (const key of keys) {
+		params.push(encodeURIComponent(key) + "=" + encodeURIComponent(body[key]))
+	}
+	let encodedBody = params.join('&')
+	let stringToSign = 'POST&%2F&' + encodeURIComponent(encodedBody)
+	const header = new Headers({
+		"Content-Type": "application/x-www-form-urlencoded"
+	})
+	const signature = await HmacSha1Digest(secretKey, stringToSign)
+	encodedBody += "&Signature=" + encodeURIComponent(signature)
+	return fetch(requestUrl, {
+		method: "POST",
+		body: encodedBody,
+		headers: header
+	})
+		.then(res => res.json())
 }
 
 /**
@@ -132,12 +132,12 @@ async function aliOpenAPIRequest(action, body, accessKey, secretKey) {
  * @returns 
  */
 async function HmacSha1Digest(secretKey, stringToSign) {
-    const enc = new TextEncoder()
-    let key = await crypto.subtle.importKey('raw', enc.encode(secretKey+"&"), {
-        name: 'HMAC',
-        hash: 'SHA-1'
-    }, false, ['sign'])
-    let signature = await crypto.subtle.sign('HMAC', key, enc.encode(stringToSign))
-    signature = String.fromCharCode(...new Uint8Array(signature))
-    return btoa(signature)
+	const enc = new TextEncoder()
+	let key = await crypto.subtle.importKey('raw', enc.encode(secretKey + "&"), {
+		name: 'HMAC',
+		hash: 'SHA-1'
+	}, false, ['sign'])
+	let signature = await crypto.subtle.sign('HMAC', key, enc.encode(stringToSign))
+	signature = String.fromCharCode(...new Uint8Array(signature))
+	return btoa(signature)
 }
