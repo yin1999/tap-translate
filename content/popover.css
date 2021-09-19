@@ -1,33 +1,53 @@
 .popover__content {
 	position: absolute;
 	margin-top: 1rem;
-	background-color: #bfbfbf;
+	background-color: var(--tapTranslate-bg);
 	padding: 1rem;
-	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+	box-shadow: var(--tapTranslate-box-shadow-light);
 	width: auto;
 }
 
 .popover__content:before {
 	position: absolute;
-	z-index: 1;
-	content: "";
-	left: 50%;
-	transform: translate(-50%,0);
-	top: -8px;
+	z-index: 9;
+	width: 8px;
+	height: 8px;
+	content: " ";
+	background-color: var(--tapTranslate-bg);
+	top: -4px;
+	left: calc(50% - 4px);
+	transform: rotate(45deg);
 	border-style: solid;
-	border-width: 0 10px 10px 10px;
-	border-color: transparent transparent #bfbfbf transparent;
-	transition-property: transform;
+	border-width: 1px;
+	border-color: var(--tapTranslate-borderColor);
 }
 
 .popover__wrapper .popover__content {
 	z-index: 10;
 	opacity: 1;
-	transform: translate(0, -20px);
 	transition: all 0.2s cubic-bezier(0.75, -0.02, 0.2, 0.97);
 }
 
 .popover__message {
+	color: var(--tapTranslate-textColor);
 	text-align: center;
 	margin: 0 0 0 0;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--tapTranslate-bg: #1e1e22;
+		--tapTranslate-textColor: #96969a;
+		--tapTranslate-borderColor: #2c2c3a;
+		--tapTranslate-box-shadow-light: 0 2px 12px 0 rgba(230, 219, 219, 0.822);
+	}
+}
+
+@media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
+	:root {
+		--tapTranslate-bg: #fff;
+		--tapTranslate-textColor: #000;
+		--tapTranslate-borderColor: #dcdfe6;
+		--tapTranslate-box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+	}
 }

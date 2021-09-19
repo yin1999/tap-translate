@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "tap translate",
 	"description": "tap to translate",
-	"version": "0.04",
+	"version": "0.05",
 	"permissions": [
 		"storage"
 	],
