@@ -1,24 +1,24 @@
 /**
  * 
- * @param {String} text 
+ * @param {String} SourceText 
  * @param {Object} token 
- * @param {String | null} sourceLanguage 
+ * @param {String} SourceLanguage 
  * @returns 
  */
-async function aliTranslate(text, token, sourceLanguage) {
-	if (!token.ak || !token.sk) {
+async function aliTranslate(SourceText, token, SourceLanguage = undefined) {
+	if (!token || !token.ak || !token.sk) {
 		return {
 			status: 'access key or secret key has not set'
 		}
 	}
 	// detect language
-	if (!sourceLanguage) {
+	if (!SourceLanguage) {
 		const body = {
-			"SourceText": text
+			SourceText
 		}
 		try {
 			const res = await aliOpenAPIRequest('GetDetectLanguage', body, token.ak, token.sk)
-			sourceLanguage = res.DetectedLanguage
+			SourceLanguage = res.DetectedLanguage
 		} catch (err) {
 			return {
 				status: err
@@ -27,34 +27,33 @@ async function aliTranslate(text, token, sourceLanguage) {
 	}
 	const body = {
 		FormatType: 'text',
-		SourceLanguage: sourceLanguage,
-		SourceText: text,
+		SourceLanguage,
+		SourceText,
 		TargetLanguage: 'zh',
 	}
-	return aliOpenAPIRequest('TranslateGeneral', body, token.ak, token.sk)
-		.then(res => {
-			return {
-				translatedText: res.Data.Translated,
-				sourceLanguage: sourceLanguage,
-				status: "ok"
-			}
-		})
-		.catch(err => {
-			console.log(err)
-			return {
-				status: err
-			}
-		})
+	try {
+		const res = await aliOpenAPIRequest('TranslateGeneral', body, token.ak, token.sk)
+		return {
+			translatedText: res.Data.Translated,
+			SourceLanguage,
+			status: "ok"
+		}
+	} catch (err) {
+		console.error(err)
+		return {
+			status: err.toString()
+		}
+	}
 }
 
 /**
  * 
- * @param {String} text 
+ * @param {String} SourceText 
  * @param {Object} token 
- * @param {String | null} sourceLanguage 
+ * @param {String} SourceLanguage 
  * @returns 
  */
-async function googleTranslate(text, token, sourceLanguage) {
+async function googleTranslate(SourceText, token, SourceLanguage = undefined) {
 	if (!token.key) {
 		return {
 			status: 'key has not set'
@@ -62,35 +61,35 @@ async function googleTranslate(text, token, sourceLanguage) {
 	}
 	const requestUrl = 'https://translation.googleapis.com/language/translate/v2'
 	const body = {
-		q: text,
+		q: SourceText,
 		target: "zh",
 		format: "text"
 	}
-	if (sourceLanguage) {
-		body.source = source
+	if (SourceLanguage) {
+		body.source = SourceLanguage
 	}
-	const header = {
+	const headers = {
 		"Content-Type": "application/json; charset=utf-8"
 	}
 	const url = new URL(requestUrl)
 
 	url.searchParams.append("key", token.key)
 	try {
-		const res = await fetch(url, {
+		let res = await fetch(url, {
 			method: "POST",
 			body: JSON.stringify(body),
-			headers: header
+			headers
 		})
-		const res_1 = await res.json()
+		res = await res.json()
 		return {
-			translatedText: res_1.data.translations[0].translatedText,
-			sourceLanguage: res_1.data.translations[0].detectedSourceLanguage,
+			translatedText: res.data.translations[0].translatedText,
+			SourceLanguage: SourceLanguage || res.data.translations[0].detectedSourceLanguage,
 			status: "ok"
 		}
 	} catch (err) {
 		console.error(err)
 		return {
-			status: err
+			status: err.toString()
 		}
 	}
 }
@@ -100,29 +99,27 @@ async function aliOpenAPIRequest(action, body, accessKey, secretKey) {
 	body.AccessKeyId = accessKey
 	body.Action = action
 	body.Format = 'JSON'
-	body.SignatureNonce = Math.random().toString(36).slice(-31)
 	body.SignatureMethod = 'HMAC-SHA1'
 	body.SignatureVersion = '1.0'
 	body.Timestamp = new Date().toISOString()
 	body.Version = '2018-10-12'
-	const keys = Object.keys(body).sort()
-	const params = []
-	for (const key of keys) {
-		params.push(encodeURIComponent(key) + "=" + encodeURIComponent(body[key]))
-	}
-	let encodedBody = params.join('&')
-	let stringToSign = 'POST&%2F&' + encodeURIComponent(encodedBody)
-	const header = new Headers({
-		"Content-Type": "application/x-www-form-urlencoded"
-	})
+	const randomArray = crypto.getRandomValues(new Uint8Array(4))
+	body.SignatureNonce = btoa(randomArray)
+	const params = new URLSearchParams(body)
+	params.sort()
+	let encodedBody = params.toString()
+	const stringToSign = 'POST&%2F&' + encodeURIComponent(encodedBody)
 	const signature = await HmacSha1Digest(secretKey, stringToSign)
 	encodedBody += "&Signature=" + encodeURIComponent(signature)
-	return fetch(requestUrl, {
+	const headers = {
+		"Content-Type": "application/x-www-form-urlencoded"
+	}
+	const resp = await fetch(requestUrl, {
 		method: "POST",
 		body: encodedBody,
-		headers: header
+		headers
 	})
-		.then(res => res.json())
+	return await resp.json()
 }
 
 /**
