@@ -51,14 +51,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 			})
 			return
 		}
-		chrome.storage.sync.get(["token", "engine"], async result => {
-			if (!result.engine || !result.token || !result.token[result.engine]) {
+		chrome.storage.sync.get(["default"], async result => {
+			if (!result.default) {
 				sendResponse({
-					status: "please complete the settings"
+					status: "请在'扩展程序选项'中完善设置"
 				})
 				return
 			}
-			translateAPI[result.engine](message, result.token[result.engine])
+			translateAPI[result.default.name](message, result.default)
 				.then(res => {
 					sendResponse(res)
 				})

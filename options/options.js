@@ -1,42 +1,51 @@
-chrome.storage.sync.get(['token', 'engine'], result => {
+chrome.storage.sync.get(['token', 'default'], result => {
 	if (result.token) {
 		const token = result.token
 		for (const key in token) {
+			document.querySelector(`fieldset[name=${key}]`)
 			const value = token[key]
-			if (typeof value === 'object') {
-				for (const k in value) {
-					document.getElementById(`${key}-${k}`).value = value[k]
-				}
-			} else {
-				document.getElementById(`${key}`).value = value
+			for (const k in value) {
+				document.getElementsByName(k)[0].value = value[k]
 			}
 		}
 	}
-	if (result.engine) {
-		document.getElementById(`${result.engine}-engine`).checked = true
+	if (result.default) {
+		document.getElementById(`${result.default.name}-engine`).checked = true
 	}
 })
 
 document.getElementById('save').addEventListener('click', () => {
-	const idList = ['google-key', 'ali-ak', 'ali-sk']
-
 	const data = {}
 	data.token = {}
-	for (const id of idList) {
-		const l = id.split('-')
-		switch (l.length) {
-			case 1:
-				data.token[id] = document.getElementById(id).value
-				break
-			case 2:
-				if (!data.token[l[0]]) {
-					data.token[l[0]] = {}
-				}
-				data.token[l[0]][l[1]] = document.getElementById(id).value
-				break
+	const fieldsets = document.getElementsByTagName('fieldset')
+	for (const field of fieldsets) {
+		if (field.name === 'select') {
+			continue
+		}
+		const apiKey = {}
+		const inputs = field.getElementsByTagName('input')
+		for (const input of inputs) {
+			if (input.value) {
+				apiKey[input.name] = input.value
+			}
+		}
+		const objectLength = Object.keys(apiKey).length
+		if (objectLength === inputs.length) {
+			data.token[field.name] = apiKey
+		} else if (objectLength !== 0) {
+			alert(`${field.getElementsByTagName('legend')[0].innerText}未设置完整（不使用则清空所有字段）`)
+			return
 		}
 	}
-	data.engine = document.querySelector('[name=engine-select]:checked').id.slice(0, -7)
-	console.log(data)
+	const defaultEngine = document.querySelector('[name=engine-select]:checked').id.slice(0, -7)
+	if (data.token[defaultEngine]) {
+		data.default = { ...data.token[defaultEngine] }
+		data.default.name = defaultEngine
+	} else if (Object.keys(data.token).length === 0) {
+		data.default = null
+	} else {
+		alert(`${document.querySelector(`fieldset[name=${defaultEngine}]`).querySelector('legend').innerText}未设置`)
+		return
+	}
 	chrome.storage.sync.set(data)
 })

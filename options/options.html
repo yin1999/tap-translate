@@ -10,23 +10,23 @@
 
 <body>
 	<form>
-		<fieldset>
+		<fieldset name="google">
 			<legend>Google Translate</legend>
-			<label for="google-key">key</label>
-			<input type="password" name="google-key" id="google-key">
+			<label for="key">key</label>
+			<input type="password" name="key">
 		</fieldset>
-		<fieldset>
+		<fieldset name="ali">
 			<legend>Ali Translate</legend>
-			<label for="ali-ak">Access Key</label>
-			<input type="text" name="ali-ak" id="ali-ak">
+			<label for="ak">Access Key</label>
+			<input type="text" name="ak">
 
-			<label for="ali-sk">Secret Key</label>
-			<input type="password" name="ali-sk" id="ali-sk">
+			<label for="sk">Secret Key</label>
+			<input type="password" name="sk">
 		</fieldset>
 
-		<fieldset>
+		<fieldset name="select">
 			<legend>Engine Selection</legend>
-			<ul id="select">
+			<ul>
 				<div>
 					<input type="radio" checked name="engine-select" id="ali-engine">
 					<label for="ali-engine">Ali Translate</label>
