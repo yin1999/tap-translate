@@ -35,7 +35,7 @@ jobs:
 
     - name: package files
       run: |
-        zip -rq tap-translate.zip * -x README.md
+        zip -rq tap-translate.zip * -x README.md LICENSE
 
     - name: Create Release
       run: |
