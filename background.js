@@ -1,6 +1,5 @@
 importScripts('translateAPI.js')
 
-const engineList = ['ali', 'google']
 const translateAPI = {
 	ali: aliTranslate,
 	google: googleTranslate
@@ -8,8 +7,7 @@ const translateAPI = {
 
 chrome.runtime.onStartup.addListener(() => {
 	chrome.storage.local.get("state", result => {
-		const state = result.state !== undefined ? result.state : true
-		setState(state)
+		setState(result.state ?? true)
 	})
 })
 
@@ -19,29 +17,11 @@ chrome.action.onClicked.addListener(() => {
 	})
 })
 
-function setState(newstate) {
-	chrome.storage.local.set({ state: newstate })
-	chrome.action.setIcon({ path: newstate ? "translate-on.png" : "translate-off.png" })
-	chrome.action.setTitle({ title: "Status: " + (newstate ? "ON" : "OFF") })
+function setState(state) {
+	chrome.storage.local.set({ state })
+	chrome.action.setIcon({ path: state ? "translate-on.png" : "translate-off.png" })
+	chrome.action.setTitle({ title: "Status: " + (state ? "ON" : "OFF") })
 }
-
-// // for shortcut
-// chrome.commands.onCommand.addListener(() => {
-// 	chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-// 		if (tabs.length == 0) {
-// 			return
-// 		}
-// 		chrome.scripting.executeScript({
-// 			target: {
-// 				tabId: tabs[0].id
-// 			},
-// 			function: () => window.getSelection().toString()
-// 		}, result => {
-// 			const text = result[0].result
-
-// 		})
-// 	})
-// })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	chrome.storage.local.get("state", result => {
