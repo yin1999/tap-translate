@@ -38,5 +38,4 @@ function renderBubble(x, y, selection) {
 	innerContent.innerText = selection
 	bubbleDOM.style.top = y + 'px'
 	bubbleDOM.style.left = x + 'px'
-	bubbleDOM.style.visibility = 'visible'
 }

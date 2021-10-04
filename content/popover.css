@@ -1,10 +1,27 @@
+:root {
+	--tapTranslate-bg: #fff;
+	--tapTranslate-textColor: #000;
+	--tapTranslate-borderColor: #dcdfe6;
+	--tapTranslate-box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) { /* dark mode */
+	:root {
+		--tapTranslate-bg: #1e1e22;
+		--tapTranslate-textColor: #96969a;
+		--tapTranslate-borderColor: #2c2c3a;
+		--tapTranslate-box-shadow-light: 0 2px 12px 0 rgba(230, 219, 219, 0.822);
+	}
+}
+
 .popover__content {
 	position: absolute;
-	margin-top: 1rem;
+	margin-top: 0.5rem;
 	background-color: var(--tapTranslate-bg);
-	padding: 1rem;
+	padding: 0.3rem 0.5rem;
 	box-shadow: var(--tapTranslate-box-shadow-light);
-	width: auto;
+	z-index: 10;
+	transition: all 0.2s cubic-bezier(0.75, -0.02, 0.2, 0.97);
 }
 
 .popover__content:before {
@@ -22,32 +39,8 @@
 	border-color: var(--tapTranslate-borderColor);
 }
 
-.popover__wrapper .popover__content {
-	z-index: 10;
-	opacity: 1;
-	transition: all 0.2s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-}
-
 .popover__message {
 	color: var(--tapTranslate-textColor);
 	text-align: center;
 	margin: 0 0 0 0;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--tapTranslate-bg: #1e1e22;
-		--tapTranslate-textColor: #96969a;
-		--tapTranslate-borderColor: #2c2c3a;
-		--tapTranslate-box-shadow-light: 0 2px 12px 0 rgba(230, 219, 219, 0.822);
-	}
-}
-
-@media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
-	:root {
-		--tapTranslate-bg: #fff;
-		--tapTranslate-textColor: #000;
-		--tapTranslate-borderColor: #dcdfe6;
-		--tapTranslate-box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-	}
 }
