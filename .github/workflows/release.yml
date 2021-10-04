@@ -19,19 +19,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
     # get version from manifest.json
-    - uses: actions/github-script@v3
-      id: get-version
-      with:
-        result-encoding: string
-        script: |
-          const fs = require('fs')
-          const manifest = JSON.parse(fs.readFileSync('manifest.json'))
-          return 'v' + manifest.version
+    - name: Get Version
+      run: |
+        echo "ReleaseVersion=v$(cat manifest.json | grep -oEm 1 '"version": "[0-9]{1,}.[0-9]{1,}(.[0-9]{1,})?"' | cut -d':' -f2 | sed 's/ //g; s/"//g')" >> ${GITHUB_ENV}
 
     - name: package files
       run: |
@@ -42,5 +33,5 @@ jobs:
         gh release create ${{ steps.get-version.outputs.result }} -n "${{ env.MESSAGE }}" -t "${{ env.name }}" ${{ env.files }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        name: tap-translate-${{ steps.get-version.outputs.result }}
+        name: tap-translate-${{ env.ReleaseVersion }}
         files: tap-translate.zip
